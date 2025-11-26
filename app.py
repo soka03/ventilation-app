@@ -290,8 +290,9 @@ if st.button("🚀 실시간 분석 시작", type="primary"):
                         st.warning("**환기 자제 권고**\n\n향후 3시간 동안 미세먼지 농도가 '나쁨' 수준일 것으로 예측됩니다.")
                     
                     with st.expander("상세 수집 데이터 보기"):
-                        st.dataframe(df_raw.tail(7))
+                        st.dataframe(df_raw.tail(10))
 
             except Exception as e:
 
                 st.error(f"분석 중 오류가 발생했습니다: {e}")
+
