@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import joblib
 import os
 import warnings
+import pytz
 from huggingface_hub import hf_hub_download
 
 warnings.filterwarnings('ignore', category=pd.errors.PerformanceWarning)
@@ -223,9 +224,10 @@ if st.button("🚀 실시간 분석 시작", type="primary"):
     else:
         status_text = st.empty()
         progress_bar = st.progress(0)
+        KST = pytz.timezone('Asia/Seoul')
         
         # (1) 데이터 수집
-        dt_now = datetime.now()
+        dt_now = datetime.now(KST)
         data_list = []
         
         status_text.text("📡 실시간 데이터 수집 중 (최근 10시간)...")
@@ -291,4 +293,5 @@ if st.button("🚀 실시간 분석 시작", type="primary"):
                         st.dataframe(df_raw.tail(7))
 
             except Exception as e:
+
                 st.error(f"분석 중 오류가 발생했습니다: {e}")
