@@ -282,17 +282,26 @@ if st.button("🚀 실시간 분석 시작", type="primary"):
                     
                     st.subheader("📢 분석 결과")
                     
-                    good_times = [x for x in infos if x['val'] <= THRESH]
-                    if good_times:
-                        best = min(good_times, key=lambda x: x['val'])
-                        st.success(f"**환기 추천!** {best['time']}가 가장 좋습니다.\n\n(예측 농도: {best['val']:.1f} µg/m³)")
+                    acceptable_hours = [x for x in infos if x['val'] <= THRESH]
+                    if acceptable_hours:
+                        
+                        best_hour_info = min(acceptable_hours, key=lambda x: x['val'])
+                        st.success(
+                            f"**환기 추천!** {best_hour_info['time']}가 3시간 내 최적의 시간입니다.\n\n"
+                            f"(예측 농도: {best_hour_info['val']:.2f} µg/m³ [{best_hour_info['txt']}])"
+                        )
                     else:
-                        st.warning("**환기 자제 권고**\n\n향후 3시간 동안 미세먼지 농도가 '나쁨' 수준일 것으로 예측됩니다.")
+                        
+                        least_bad_hour = min(infos, key=lambda x: x['val'])
+                        st.warning(
+                            f"**환기 보류:** 향후 3시간 동안 미세먼지 농도가 '나쁨' 이상('보통' 기준 초과)일 것으로 예측됩니다.\n\n"
+                            f"(참고: 3시간 중 가장 낮은 예측 농도는 **{least_bad_hour['val']:.2f} µg/m³** [{least_bad_hour['txt']}] 입니다.)"
+                        )
                     
                     with st.expander("상세 수집 데이터 보기"):
-                        st.dataframe(df_raw.tail(10))
+                        st.dataframe(df_raw.tail(7))
 
             except Exception as e:
-
                 st.error(f"분석 중 오류가 발생했습니다: {e}")
+
 
